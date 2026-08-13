@@ -53,6 +53,59 @@ If a slide needs two headings, it is two slides. The reveal animation staggers c
 
 ---
 
+## Mode A′ — Earnings variants of the deck
+
+Earnings mode reuses the deck template. Two changes to the arc above, plus two alternate
+lengths. Full metric guidance in `references/earnings-analysis.md`.
+
+**Changes at every tier:**
+- Slide 3 is the reported period — KPI tiles straight from the release, provenance-typed.
+- The deck ends on a **TLDR slide** before the disclosure. Six lines, each carrying a
+  figure, with a mandatory "the catch" line.
+
+### Brief — 4 slides
+
+| # | Slide | Contents |
+|---|-------|----------|
+| 01 | **The result** | Headline stating what happened, 4 KPI tiles, as-of date |
+| 02 | **The numbers** | ~12 metrics in one table, color legend inline |
+| 03 | **What moved and why** | Three points — one of which is the bear case |
+| 04 | **TLDR** | The six lines, then disclosure |
+
+Cut the dial, the ramp, and the risk cards. Keep the legend and the disclosure — those are
+not depth-dependent.
+
+### Deep — 14–16 slides
+
+The standard 11, plus:
+
+| Slide | Contents |
+|-------|----------|
+| **Segments** | Revenue and margin by segment; call out the mix shift explicitly |
+| **Peers** | The same 6–8 metrics for 2–3 genuine comparables, computed on the same basis |
+| **History** | 8+ quarters of the one metric the thesis turns on |
+| **Ratio appendix** | Every group the script produced — including the n/m rows and their reasons |
+
+The appendix keeping its n/m rows is deliberate. A reader who sees "P/E — n/m — TTM EPS is
+negative" learns something a blank cell hides.
+
+### The TLDR slide
+
+Use the `.note` component for the block and `.kpis` for nothing — this slide is text. Every
+line gets a number, and the figures carry the same color classes they had earlier in the deck.
+
+```html
+<div class="note r"><h4>TLDR — [TICKER] [PERIOD]</h4>
+  <p><b>The number:</b> Revenue <span class="fact">$2.58B</span>, +100% YoY…</p>
+  <p><b>The catch:</b> Interest expense <span class="risk">$640M</span> against…</p>
+  <p><b>Valuation:</b> <span class="est">4.0x</span> EV to exit-rate revenue…</p>
+  <p><b>What changed:</b> Guidance up across every line…</p>
+  <p><b>What to watch:</b> Q3 operating profit against the $200–260M guide.</p>
+  <p><b>The call:</b> [Take a position, or decline out loud.]</p></div>
+```
+
+---
+
 ## Mode B — The Dashboard (a sector, many names)
 
 Seven sections, scrolling, with sticky navigation. Numbered because the sections are a

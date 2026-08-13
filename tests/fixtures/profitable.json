@@ -1,0 +1,62 @@
+{
+  "_fixture": "Profitable, cash-generative software business. Every ratio should compute.",
+  "company": {
+    "name": "Profitable SaaS Inc",
+    "ticker": "PSAS",
+    "period": "Q2 FY2026",
+    "as_of": "2026-08-13",
+    "currency": "USD"
+  },
+  "market": {
+    "price": 210.0,
+    "shares_diluted": 300000000,
+    "market_cap": 63000000000
+  },
+  "income_statement": {
+    "revenue": 1200000000,
+    "revenue_prior_year": 900000000,
+    "revenue_prior_quarter": 1120000000,
+    "gross_profit": 948000000,
+    "operating_income": 216000000,
+    "net_income": 180000000,
+    "ebitda": 300000000,
+    "interest_expense": 12000000,
+    "eps_diluted": 0.6,
+    "eps_diluted_prior_year": 0.41,
+    "stock_based_comp": 150000000
+  },
+  "balance_sheet": {
+    "cash_and_equivalents": 3100000000,
+    "total_debt": 900000000,
+    "total_equity": 4500000000,
+    "total_assets": 7200000000,
+    "current_assets": 4400000000,
+    "current_liabilities": 2000000000,
+    "inventory": 0,
+    "receivables": 810000000
+  },
+  "cash_flow": {
+    "operating_cash_flow": 360000000,
+    "capex": 36000000
+  },
+  "forward": {
+    "eps_next_year": 2.85,
+    "revenue_next_year": 5400000000,
+    "eps_growth_pct": 28.0
+  },
+  "recurring": {
+    "arr": 4800000000,
+    "net_revenue_retention_pct": 118,
+    "sales_and_marketing": 300000000,
+    "new_arr_added": 255000000
+  },
+  "_meta": {
+    "trailing_twelve_month": {
+      "revenue": 4300000000,
+      "net_income": 610000000,
+      "eps_diluted": 2.05,
+      "ebitda": 1050000000,
+      "free_cash_flow": 1180000000
+    }
+  }
+}

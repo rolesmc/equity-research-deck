@@ -25,3 +25,7 @@ venv/
 
 # GSD planning artifacts — kept locally, not published
 .planning/
+
+# Test artifacts
+.pytest_cache/
+tests/fixtures/_tmp_*.json

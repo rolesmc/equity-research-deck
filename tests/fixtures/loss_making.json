@@ -1,0 +1,56 @@
+{
+  "_fixture": "Loss-making, capex-heavy infrastructure business. Exercises every n/m guard: negative TTM EPS, negative prior-year EPS, negative FCF, missing TTM FCF.",
+  "company": {
+    "name": "Capex Heavy Corp",
+    "ticker": "CPXH",
+    "period": "Q2 FY2026",
+    "as_of": "2026-08-13",
+    "currency": "USD"
+  },
+  "market": {
+    "price": 101.0,
+    "shares_diluted": 475000000,
+    "market_cap": 48000000000
+  },
+  "income_statement": {
+    "revenue": 2580000000,
+    "revenue_prior_year": 1290000000,
+    "revenue_prior_quarter": 2100000000,
+    "gross_profit": 1780000000,
+    "operating_income": 128000000,
+    "net_income": -290000000,
+    "ebitda": 1150000000,
+    "interest_expense": 640000000,
+    "eps_diluted": -0.61,
+    "eps_diluted_prior_year": -0.34,
+    "stock_based_comp": 210000000
+  },
+  "balance_sheet": {
+    "cash_and_equivalents": 6900000000,
+    "total_debt": 35000000000,
+    "total_equity": 4100000000,
+    "total_assets": 52000000000,
+    "current_assets": 9800000000,
+    "current_liabilities": 7400000000,
+    "inventory": 0,
+    "receivables": 2200000000
+  },
+  "cash_flow": {
+    "operating_cash_flow": 1240000000,
+    "capex": 9800000000
+  },
+  "forward": {
+    "eps_next_year": 0.85,
+    "revenue_next_year": 19000000000,
+    "eps_growth_pct": 42.0
+  },
+  "_meta": {
+    "trailing_twelve_month": {
+      "revenue": 9100000000,
+      "net_income": -980000000,
+      "eps_diluted": -2.1,
+      "ebitda": 3900000000,
+      "free_cash_flow": null
+    }
+  }
+}

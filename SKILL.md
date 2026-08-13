@@ -1,19 +1,36 @@
 ---
 name: equity-research-deck
-description: Research a company, sector, or thesis and render the analysis as a presentation-grade single-file HTML deck or dashboard. Use when the user asks for an equity research deck, earnings breakdown, sector map, investment thesis, stock analysis, valuation walkthrough, "slide deck" or "dashboard" about a ticker, ETF, or industry — or wants a financial overview presented visually rather than as prose. Also use when turning earnings results, 10-Q/10-K data, or market research into a shareable presentation.
+description: Research a company, sector, or thesis and render the analysis as a presentation-grade single-file HTML deck or dashboard. Use when the user asks for an equity research deck, earnings breakdown, sector map, investment thesis, stock analysis, valuation walkthrough, "slide deck" or "dashboard" about a ticker, ETF, or industry — or wants a financial overview presented visually rather than as prose. Also use when asked to pull or analyze a company's latest earnings, compute financial ratios (P/E, PEG, Rule of 40, EV/EBITDA, margins, interest coverage), compare a stock to peers, or turn 10-Q/10-K data into a shareable report with a TLDR.
 ---
 
 # Equity Research Deck
 
-Produces two kinds of deliverable, both single-file HTML that opens in any browser:
+Three modes. All output single-file HTML that opens in any browser, or plain text when the
+user wants a report rather than a presentation.
 
-| Mode | Use when | Template |
-|------|----------|----------|
-| **Deck** | One company, one argument, delivered linearly. Earnings breakdowns, thesis walkthroughs, valuation cases. | `assets/deck-template.html` |
-| **Dashboard** | A sector or theme with many names. Comparisons, scoreboards, supply-chain maps, screens. | `assets/dashboard-template.html` |
+| Mode | Use when | Build with |
+|------|----------|-----------|
+| **Earnings** | "Pull the latest earnings on X." A specific reported period, metrics, TLDR. | `references/earnings-analysis.md` + `scripts/earnings_metrics.py` |
+| **Deck** | One company, one argument, delivered linearly. Thesis walkthroughs, valuation cases. | `assets/deck-template.html` |
+| **Dashboard** | A sector or theme with many names. Comparisons, scoreboards, screens. | `assets/dashboard-template.html` |
 
-If the request names one ticker → deck. If it names a sector, theme, or "best X" → dashboard.
+Routing: a named reporting period or "latest earnings" → **earnings**. One ticker and a
+thesis question → **deck**. A sector, theme, or "best X" → **dashboard**. Earnings mode
+renders into the deck template when the user wants slides, and to text when they don't.
 If genuinely ambiguous, ask once; don't guess and rebuild.
+
+### Detail level (earnings mode)
+
+Ask once if unstated; default to **standard**.
+
+| Tier | Output | Metrics |
+|------|--------|---------|
+| **Brief** | One screen, or 4 slides | ~12 headline |
+| **Standard** | Full report, or 11 slides | ~35 across 8 groups |
+| **Deep** | Extended, or 14–16 slides | Everything, plus segments, peers, multi-year history |
+
+Depth changes; honesty does not. Every tier marks provenance, names the bear case, and
+carries disclosure.
 
 ---
 
@@ -64,6 +81,23 @@ Follow `references/metrics-playbook.md`. Required for a deck:
 - One driving variable isolated for the interactive sensitivity dial.
 - Bull case, bear case, and explicit kill criteria.
 
+**In earnings mode, compute the ratios with the script — never by hand:**
+
+```bash
+python3 scripts/earnings_metrics.py --schema > work/TICKER.json   # blank input
+# fill it from the filing; leave anything you don't have as null
+python3 scripts/earnings_metrics.py work/TICKER.json --tier standard
+python3 scripts/earnings_metrics.py work/TICKER.json --format json   # to feed a deck
+```
+
+It computes P/E, PEG, P/S, EV/Sales, EV/EBITDA, EV/FCF, P/B, FCF yield, all five margins,
+ROE/ROA/ROIC, all three Rule of 40 variants, net debt/EBITDA, interest coverage, current
+and quick ratios, cash conversion, SBC intensity, DSO, NRR and magic number.
+
+It returns **n/m** rather than a number wherever a ratio is undefined — P/E on a loss, PEG
+on negative growth, EV/EBITDA on negative EBITDA. Respect the refusal; do not substitute
+an adjusted figure to fill the cell without saying so in the same sentence.
+
 ### 4. Build
 
 Copy the template, then fill it. Load `references/deck-architecture.md` for the slide arc
@@ -92,6 +126,11 @@ validator checks structure, not whether the argument holds.
 - **Plain English.** Define the jargon inline the first time. "Power is the unit of
   production here" beats assuming the reader knows.
 - **No fabricated precision.** If you estimated it, it is amber and it is round.
+- **n/m is an answer.** A ratio that is undefined stays undefined. A page full of n/m is
+  itself the finding — say the company has no earnings and can only be valued on revenue
+  and a story, rather than reaching for a metric that manufactures a number.
+- **Every earnings report ends with a TLDR.** Six lines, every line carrying a figure, and
+  a mandatory "the catch" line. Spec in `references/earnings-analysis.md`.
 
 ## Reference files
 
@@ -99,6 +138,7 @@ Load on demand — not all at once.
 
 | File | Load when |
 |------|-----------|
+| `references/earnings-analysis.md` | Any earnings request: tiers, metric definitions, TLDR spec |
 | `references/research-protocol.md` | Starting research; deciding whether sourcing is sufficient |
 | `references/metrics-playbook.md` | Doing the quantitative breakdown; building the sensitivity model |
 | `references/deck-architecture.md` | Structuring slides or dashboard sections |
