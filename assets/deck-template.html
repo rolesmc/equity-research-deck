@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[TICKER] [PERIOD] — [PUBLICATION]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070A0F; --panel:#0D131B; --panel2:#111925; --line:#1A2431;
+  --ink:#E8EFF6; --dim:#7C90A6; --faint:#4A5D71;
+  --fact:#35D69A;      /* company-stated */
+  --est:#F2B33D;       /* author estimate */
+  --risk:#E8695E;      /* risk */
+  --disp:'Archivo',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+
+/* ---------- chrome ---------- */
+.top{position:fixed;top:0;left:0;right:0;height:52px;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(14px,3vw,34px);border-bottom:1px solid var(--line);
+  background:rgba(7,10,15,.92);backdrop-filter:blur(8px)}
+.brand{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:2.4px}
+.brand i{color:var(--fact);font-style:normal}
+.brand small{display:block;font-size:8px;letter-spacing:2.2px;color:var(--faint);
+  font-weight:400;margin-top:1px}
+.count{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:1.5px}
+.count b{color:var(--ink);font-weight:500}
+
+.bar{position:fixed;top:52px;left:0;height:2px;background:var(--fact);z-index:51;
+  transition:width .45s cubic-bezier(.4,0,.2,1);width:0}
+
+.dots{position:fixed;bottom:0;left:0;right:0;z-index:50;height:54px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  border-top:1px solid var(--line);background:rgba(7,10,15,.92);backdrop-filter:blur(8px)}
+.dot{width:22px;height:4px;border:0;border-radius:0;background:var(--line);cursor:pointer;
+  padding:0;transition:background .2s}
+.dot:hover{background:var(--faint)}
+.dot[aria-current="true"]{background:var(--fact)}
+.dot:focus-visible{outline:2px solid var(--fact);outline-offset:3px}
+
+.nav{position:fixed;bottom:0;z-index:52;height:54px;width:52px;border:0;background:none;
+  color:var(--faint);font-size:20px;cursor:pointer;font-family:var(--mono)}
+.nav:hover{color:var(--ink)}
+.nav:focus-visible{outline:2px solid var(--fact);outline-offset:-4px}
+.nav.prev{left:clamp(6px,2vw,24px)} .nav.next{right:clamp(6px,2vw,24px)}
+.nav[disabled]{opacity:.22;cursor:default}
+
+/* ---------- slides ---------- */
+.stage{position:absolute;inset:52px 0 54px 0;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;
+  padding:clamp(20px,4.2vw,54px) clamp(16px,5vw,72px) clamp(28px,5vw,48px);
+  opacity:0;visibility:hidden;transition:opacity .34s ease}
+.slide[data-on="1"]{opacity:1;visibility:visible}
+.wrap{max-width:1080px;margin:0 auto;width:100%}
+
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--fact);margin-bottom:16px}
+.eyebrow span{color:var(--faint)}
+h1{font-family:var(--disp);font-weight:800;letter-spacing:-.035em;line-height:.97;
+  font-size:clamp(38px,7.4vw,86px)}
+h2{font-family:var(--disp);font-weight:700;letter-spacing:-.028em;line-height:1.04;
+  font-size:clamp(26px,4.4vw,50px);margin-bottom:14px}
+h3{font-family:var(--mono);font-size:11px;letter-spacing:2.2px;text-transform:uppercase;
+  color:var(--fact);margin:26px 0 10px}
+p{font-size:clamp(14px,1.55vw,17px);line-height:1.62;color:#BCCBDA;max-width:70ch}
+p+p{margin-top:11px}
+p b,strong{color:#fff;font-weight:600}
+.lead{font-size:clamp(16px,2vw,21px);line-height:1.55;color:#C9D6E4}
+em{color:var(--ink);font-style:italic}
+
+/* reveal */
+.r{opacity:0;transform:translateY(12px)}
+[data-on="1"] .r{opacity:1;transform:none;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.3,1)}
+[data-on="1"] .r:nth-child(1){transition-delay:.04s}
+[data-on="1"] .r:nth-child(2){transition-delay:.10s}
+[data-on="1"] .r:nth-child(3){transition-delay:.16s}
+[data-on="1"] .r:nth-child(4){transition-delay:.22s}
+[data-on="1"] .r:nth-child(5){transition-delay:.28s}
+[data-on="1"] .r:nth-child(6){transition-delay:.34s}
+
+/* ---------- pieces ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:22px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--fact);padding:15px 16px}
+.kpi.risk{border-left-color:var(--risk)}
+.kpi.est{border-left-color:var(--est)}
+.kpi .l{font-family:var(--mono);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--faint);margin-bottom:7px}
+.kpi .v{font-family:var(--mono);font-weight:700;font-size:clamp(22px,3.3vw,32px);line-height:1;letter-spacing:-.02em}
+.kpi .n{font-size:12px;color:var(--dim);margin-top:6px}
+
+.tblscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--faint);text-align:right;padding:8px 10px;border-bottom:1px solid #26333F;font-weight:400}
+th:first-child{text-align:left}
+td{font-family:var(--mono);font-size:clamp(12px,1.5vw,14.5px);padding:9px 10px;text-align:right;
+  border-bottom:1px solid #141C26;font-variant-numeric:tabular-nums}
+td:first-child{text-align:left;font-family:var(--body);color:#BCCBDA;font-size:clamp(13px,1.5vw,15px)}
+tr.hi td{background:#101823;color:#fff}
+tr.hi td:first-child{color:#fff;font-weight:600}
+.fact{color:var(--fact)} .est{color:var(--est)} .risk{color:var(--risk)} .dim{color:var(--dim)}
+
+.note{background:var(--panel);border:1px solid var(--line);padding:15px 17px;margin:16px 0}
+.note h4{font-family:var(--disp);font-size:clamp(15px,1.9vw,19px);font-weight:700;
+  letter-spacing:-.02em;margin-bottom:7px}
+.quote{border-left:2px solid var(--fact);background:var(--panel);padding:14px 18px;margin:16px 0}
+.quote p{font-style:italic;color:#C9D6E4;max-width:none}
+.quote cite{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.8px;
+  color:var(--faint);font-style:normal;margin-top:9px}
+.src{font-family:var(--mono);font-size:10.5px;color:var(--faint);line-height:1.6;margin-top:10px}
+
+/* bar chart */
+.chart{display:flex;align-items:flex-end;gap:clamp(6px,1.6vw,18px);height:clamp(150px,26vh,215px);
+  margin:22px 0 6px}
+.cb{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.cb .val{font-family:var(--mono);font-size:clamp(11px,1.6vw,15px);font-weight:700;margin-bottom:7px}
+.cb .col{width:100%;background:#1C2836;height:0;transition:height .8s cubic-bezier(.2,.8,.3,1)}
+[data-on="1"] .cb .col{height:var(--h)}
+.cb:nth-child(2) .col{transition-delay:.06s}
+.cb:nth-child(3) .col{transition-delay:.12s}
+.cb:nth-child(4) .col{transition-delay:.18s}
+.cb:nth-child(5) .col{transition-delay:.24s}
+.cb.now .col{background:var(--fact)}
+.cb.low .col{background:#2A3A4B}
+.cb .lab{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:9px;letter-spacing:1px}
+
+/* ramp ladder */
+.ladder{margin:20px 0}
+.rung{display:grid;grid-template-columns:clamp(58px,9vw,90px) 1fr clamp(74px,12vw,120px);
+  gap:clamp(8px,1.6vw,16px);align-items:center;padding:9px 0;border-bottom:1px solid #141C26}
+.rung .yr{font-family:var(--mono);font-size:clamp(12px,1.6vw,15px);color:#BCCBDA}
+.rung .track{height:12px;background:#111925;position:relative;overflow:hidden}
+.rung .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--fact);
+  transition:width .9s cubic-bezier(.2,.8,.3,1)}
+[data-on="1"] .rung .fill{width:var(--w)}
+.rung:nth-child(2) .fill{transition-delay:.08s}
+.rung:nth-child(3) .fill{transition-delay:.16s}
+.rung:nth-child(4) .fill{transition-delay:.24s}
+.rung:nth-child(5) .fill{transition-delay:.32s}
+.rung.est .fill{background:var(--est)}
+.rung .amt{font-family:var(--mono);font-size:clamp(11px,1.5vw,14px);text-align:right;color:#fff}
+
+/* sensitivity dial */
+.dial{background:var(--panel);border:1px solid var(--line);padding:clamp(16px,2.6vw,26px);margin:18px 0}
+.dialtop{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-end;margin-bottom:6px}
+.dlab{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--faint)}
+.dval{font-family:var(--mono);font-weight:700;font-size:clamp(26px,4.6vw,44px);line-height:1;letter-spacing:-.02em}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:34px;background:none;cursor:pointer;margin-top:6px}
+input[type=range]::-webkit-slider-runnable-track{height:5px;background:#1E2A38}
+input[type=range]::-moz-range-track{height:5px;background:#1E2A38}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;
+  background:var(--fact);border:3px solid var(--bg);margin-top:-8px;border-radius:50%}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;background:var(--fact);
+  border:3px solid var(--bg);border-radius:50%}
+input[type=range]:focus-visible{outline:2px solid var(--fact);outline-offset:4px}
+.ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--faint)}
+.outs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:18px}
+.out{background:var(--panel2);border:1px solid var(--line);padding:13px 15px}
+.out .l{font-family:var(--mono);font-size:9px;letter-spacing:1.7px;text-transform:uppercase;color:var(--faint)}
+.out .v{font-family:var(--mono);font-weight:700;font-size:clamp(19px,2.9vw,27px);margin-top:6px;letter-spacing:-.02em}
+.tagline{font-family:var(--mono);font-size:11px;color:var(--est);margin-top:12px;min-height:1.5em}
+
+/* risk cards */
+.risks{display:grid;gap:9px;margin-top:16px}
+.rk{background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--risk);padding:13px 16px}
+.rk.mid{border-left-color:var(--est)}
+.rk.lo{border-left-color:var(--faint)}
+.rk h4{font-family:var(--disp);font-size:clamp(14px,1.8vw,17px);font-weight:700;letter-spacing:-.015em;margin-bottom:5px}
+.rk p{font-size:clamp(12.5px,1.4vw,14.5px);max-width:none;color:#A9BACB}
+
+/* legend + meta */
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px;font-family:var(--mono);
+  font-size:10px;letter-spacing:1.3px;color:var(--faint)}
+.legend i{display:inline-block;width:16px;height:3px;margin-right:7px;vertical-align:middle;font-style:normal}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px;
+  margin-top:30px;padding-top:18px;border-top:1px solid var(--line)}
+.meta .l{font-family:var(--mono);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--faint)}
+.meta .v{font-family:var(--mono);font-size:clamp(15px,2.2vw,20px);margin-top:4px;font-weight:500}
+.hint{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;color:var(--faint);margin-top:26px}
+.disc{font-size:12px;color:var(--dim);line-height:1.6;max-width:74ch;margin-top:14px}
+.pill{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  border:1px solid var(--line);padding:3px 8px;margin:0 6px 6px 0;color:var(--dim)}
+.pill.w{border-color:#6A5518;color:var(--est)}
+
+@media (max-width:640px){
+  .rung{grid-template-columns:52px 1fr 78px}
+  p{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  .r{opacity:1;transform:none}
+  .cb .col{height:var(--h)} .rung .fill{width:var(--w)}
+}
+</style></head>
+<body>
+
+<!-- ============================================================
+     DECK TEMPLATE — equity-research-deck
+     Fill every [BRACKET]. Do not edit the <script> block.
+     Color classes: .fact (company-stated) .est (your estimate) .risk (downside)
+     ============================================================ -->
+
+<header class="top">
+  <div class="brand">[PUB]<i>.</i>[LICATION]<small>[TICKER] &nbsp;/&nbsp; [PERIOD]</small></div>
+  <div class="count"><b id="cur">01</b> / 11</div>
+</header>
+<div class="bar" id="bar"></div>
+
+<main class="stage" id="stage">
+
+<!-- 1 — TITLE : state the finding, not the topic -->
+<section class="slide" data-on="1"><div class="wrap">
+  <div class="eyebrow r">[Earnings Breakdown] <span>/</span> [EXCHANGE: TICKER]</div>
+  <h1 class="r">[Headline that<br>states the finding,<br>not the subject.]</h1>
+  <div class="r"><p class="lead" style="margin-top:22px;max-width:56ch">[Three sentences.
+    What happened, what it's worth, what could break it.]</p></div>
+  <div class="meta r">
+    <div><div class="l">Period</div><div class="v">[Q2 2026]</div></div>
+    <div><div class="l">Price</div><div class="v">[~$101]</div></div>
+    <div><div class="l">Market cap</div><div class="v">[~$48B]</div></div>
+    <div><div class="l">[Headline metric]</div><div class="v fact">[$104B]</div></div>
+  </div>
+  <div class="hint r">USE ARROW KEYS OR THE ARROWS BELOW &nbsp;→</div>
+</div></section>
+
+<!-- 2 — THE SHORT VERSION : one paragraph + the legend (required) -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">01 <span>/ The short version</span></div>
+  <h2 class="r">One paragraph.</h2>
+  <div class="r"><p class="lead">[The thesis a non-specialist could follow. What it does,
+    the scale of demand, the price, the catch. One number per sentence.]</p></div>
+  <div class="note r"><h4>So what are you actually betting on?</h4>
+    <p>[Name the real variable. "Not demand. Demand is answered. You're betting they can
+    keep financing the build."]</p></div>
+  <div class="r"><h3>How to read the colors</h3>
+    <div class="legend">
+      <span><i style="background:var(--fact)"></i>COMPANY-STATED FACT OR GUIDANCE</span>
+      <span><i style="background:var(--est)"></i>MY ESTIMATE — NOT GUIDANCE</span>
+      <span><i style="background:var(--risk)"></i>RISK</span>
+    </div></div>
+</div></section>
+
+<!-- 3 — THE PERIOD : what was reported -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">02 <span>/ The quarter</span></div>
+  <h2 class="r">What they reported.</h2>
+  <div class="kpis r">
+    <div class="kpi"><div class="l">[Revenue]</div><div class="v">[$2.58B]</div><div class="n">[vs. prior year]</div></div>
+    <div class="kpi"><div class="l">[Backlog]</div><div class="v">[$104B]</div><div class="n">[Up 246%]</div></div>
+    <div class="kpi"><div class="l">[Operating profit]</div><div class="v fact">[$128M]</div><div class="n">[Up from $21M]</div></div>
+    <div class="kpi risk"><div class="l">[Interest paid]</div><div class="v risk">[$640M]</div><div class="n">[The problem]</div></div>
+  </div>
+  <div class="r"><p>[Why the headline number is not the story.]</p></div>
+  <div class="r"><h3>Three things worth knowing</h3>
+    <p><b>1. [Fact readers won't have.]</b> [Why it matters.]</p>
+    <p><b>2. [Second fact.]</b> [Why it matters.]</p>
+    <p><b>3. [The structural change.]</b> [What flipped, and what it means for the model.]</p></div>
+</div></section>
+
+<!-- 4 — THE TURN : five periods + the fair-play caveat (required) -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">03 <span>/ The turn</span></div>
+  <h2 class="r">[Metric], five periods.</h2>
+  <div class="r"><p>[Why this chart carries the argument.]</p></div>
+  <div class="chart r">
+    <div class="cb"><div class="val dim">[$200M]</div><div class="col" style="--h:78%"></div><div class="lab">[Q2'25]</div></div>
+    <div class="cb"><div class="val dim">[$217M]</div><div class="col" style="--h:85%"></div><div class="lab">[Q3'25]</div></div>
+    <div class="cb low"><div class="val dim">[$88M]</div><div class="col" style="--h:34%"></div><div class="lab">[Q4'25]</div></div>
+    <div class="cb low"><div class="val risk">[$21M]</div><div class="col" style="--h:9%"></div><div class="lab">[Q1'26]</div></div>
+    <div class="cb now"><div class="val fact">[$128M]</div><div class="col" style="--h:50%"></div><div class="lab">[Q2'26]</div></div>
+  </div>
+  <div class="note r"><h4>Be fair about this</h4>
+    <p>[The unflattering reading of your own chart. What it omits. Correct the
+    overenthusiastic version of your own argument here.]</p></div>
+  <div class="r"><p class="src">[What management guides next, and which prints are the real test.]</p></div>
+</div></section>
+
+<!-- 5 — GUIDANCE -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">04 <span>/ Guidance</span></div>
+  <h2 class="r">[What moved.]</h2>
+  <div class="r tblscroll"><table>
+    <tr><th>What</th><th>Was</th><th>Now</th></tr>
+    <tr><td>[FY revenue]</td><td class="dim">[$12.0–13.0B]</td><td class="fact">[$12.4–13.2B]</td></tr>
+    <tr><td>[FY operating profit]</td><td class="dim">[$900M–1.1B]</td><td class="fact">[$960M–1.15B]</td></tr>
+    <tr class="hi"><td>[Exit rate]</td><td class="dim">—</td><td>[$18.5–19.5B]</td></tr>
+    <tr><td>[Interest expense]</td><td class="dim">—</td><td class="risk">[$860–940M]</td></tr>
+  </table></div>
+  <div class="r"><p><b>[Define the unit of production here.]</b> [One sentence a
+    non-specialist understands. This is the number to track.]</p></div>
+</div></section>
+
+<!-- 6 — THE BEAR CASE : objection, answer, your verdict -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">05 <span>/ The bear case</span></div>
+  <h2 class="r">"[The strongest objection, in its own voice.]"</h2>
+  <div class="r"><p>[State the argument fairly and mechanically.]</p></div>
+  <div class="kpis r">
+    <div class="kpi"><div class="l">[Evidence 1]</div><div class="v">[2020]</div><div class="n">[note]</div></div>
+    <div class="kpi"><div class="l">[Evidence 2]</div><div class="v fact">[2029]</div><div class="n">[note]</div></div>
+    <div class="kpi est"><div class="l">[Your assumption]</div><div class="v est">[6 yrs]</div><div class="n">[vs. ~9 real]</div></div>
+  </div>
+  <div class="quote r"><p>[Management's direct answer, quoted from the call.]</p>
+    <cite>[NAME, TITLE]</cite></div>
+  <div class="r"><p><b>In plain terms:</b> [translate the quote]. [Then say whether you
+    believe it — quoting the CFO is evidence, not analysis.]</p></div>
+</div></section>
+
+<!-- 7 — THE ENGINE : green anchors, amber interpolation -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">06 <span>/ The engine</span></div>
+  <h2 class="r">[Today] → [Horizon].</h2>
+  <div class="r"><p>[What drives the model.] Green is company-stated; amber is my own
+    interpolation between their two anchors.</p></div>
+  <div class="ladder r">
+    <div class="rung"><span class="yr">[2026]</span><span class="track"><span class="fill" style="--w:23%"></span></span><span class="amt fact">[1.85 GW]</span></div>
+    <div class="rung est"><span class="yr">[2027]</span><span class="track"><span class="fill" style="--w:38%"></span></span><span class="amt est">[~3 GW]</span></div>
+    <div class="rung est"><span class="yr">[2028]</span><span class="track"><span class="fill" style="--w:56%"></span></span><span class="amt est">[~4.5 GW]</span></div>
+    <div class="rung est"><span class="yr">[2029]</span><span class="track"><span class="fill" style="--w:78%"></span></span><span class="amt est">[~6.2 GW]</span></div>
+    <div class="rung"><span class="yr">[2030]</span><span class="track"><span class="fill" style="--w:100%"></span></span><span class="amt fact">[8 GW+]</span></div>
+  </div>
+  <div class="r"><h3>Is [the target] realistic?</h3>
+    <p>[Evidence for and against. How much is already identified vs. genuinely uncertain.]</p>
+    <p class="src">[Name the part that is genuinely uncertain, and what bites there.]</p></div>
+</div></section>
+
+<!-- 8 — THE ONE VARIABLE : two sanity checks, then the dial -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">07 <span>/ The one variable</span></div>
+  <h2 class="r">What does one [unit] earn?</h2>
+  <div class="r"><p>Every long-term estimate reduces to a single number. Two independent
+    checks bracket it:</p></div>
+  <div class="r tblscroll"><table>
+    <tr><th>Check</th><th>Revenue</th><th>[Units]</th><th>Per [unit] / yr</th></tr>
+    <tr><td>This quarter, annualized</td><td>[$10.3B]</td><td>[~1.15]</td><td>[~$9.0B]</td></tr>
+    <tr class="hi"><td>Company's own target</td><td>[$19.0B]</td><td>[1.85]</td><td class="fact">[~$10.3B]</td></tr>
+  </table></div>
+  <div class="r"><p>About <b>[$10B per unit per year]</b>. Move the dial and watch
+    [horizon] change.</p></div>
+
+  <div class="dial r">
+    <div class="dialtop">
+      <div><div class="dlab">[Revenue per unit, per year]</div>
+        <div class="dval fact" id="pgw">$10.3B</div></div>
+      <div style="text-align:right"><div class="dlab">[2030 revenue at 8 units]</div>
+        <div class="dval" id="rev">$82B</div></div>
+    </div>
+    <input type="range" id="sl" min="80" max="150" value="103" step="1"
+      aria-label="[Revenue per unit per year, in hundreds of millions]">
+    <div class="ticks"><span>$8.0B</span><span>$11.5B</span><span>$15.0B</span></div>
+    <div class="outs">
+      <div class="out"><div class="l">vs [today]</div><div class="v" id="mult">6.4x</div></div>
+      <div class="out"><div class="l">Growth per year</div><div class="v" id="cagr">59%</div></div>
+      <div class="out"><div class="l">Price paid today</div><div class="v" id="evx">0.9x</div></div>
+    </div>
+    <div class="tagline" id="tag">BASE CASE</div>
+  </div>
+  <div class="r"><p class="src">[Show the arithmetic. "Price paid today = enterprise value
+    of ~$76B divided by that revenue." Say that EV rises as they borrow, so treat it as a
+    shape, not a target.]</p></div>
+</div></section>
+
+<!-- 9 — VALUATION : EV, both multiples, where consensus sits -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">08 <span>/ Valuation</span></div>
+  <h2 class="r">What you pay today.</h2>
+  <div class="r"><p>Market cap is [~$48B]. But [company] carries roughly <b>[$35B of debt]</b>
+    against [$6.9B of cash] — so the true price of the business is closer to <b>[$76B]</b>.
+    Always use that number.</p></div>
+  <div class="r tblscroll"><table>
+    <tr><th>Measure</th><th>Amount</th><th>Multiple of [$76B]</th></tr>
+    <tr><td>[Current-year revenue]</td><td>[$12.8B]</td><td>[~6.0x]</td></tr>
+    <tr class="hi"><td>[Exit rate]</td><td>[$19.0B]</td><td class="fact">[~4.0x]</td></tr>
+  </table></div>
+  <div class="note r"><h4>Where consensus sits</h4>
+    <p>[The consensus number, and the assumption it embeds. Naming the embedded assumption
+    is worth more than the number.]</p></div>
+</div></section>
+
+<!-- 10 — RISKS : ranked, first one subsumes the others -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">09 <span>/ The other side</span></div>
+  <h2 class="r">What could go wrong.</h2>
+  <div class="risks">
+    <div class="rk r"><h4>1. [The risk everything else runs through]</h4>
+      <p>[Mechanism, not sentiment. Say explicitly that the others route through this one.]</p></div>
+    <div class="rk r"><h4>2. [Second-order risk]</h4>
+      <p>[The series, and the test that resolves it.]</p></div>
+    <div class="rk mid r"><h4>3. [Accounting / policy risk]</h4>
+      <p>[What a forced change would do.]</p></div>
+    <div class="rk mid r"><h4>4. [Competitive risk]</h4>
+      <p>[Current evidence, and what to re-check.]</p></div>
+    <div class="rk mid r"><h4>5. [Execution / external risk]</h4>
+      <p>[Where it bites specifically.]</p></div>
+    <div class="rk lo r"><h4>6. [Dilution or minor risk]</h4>
+      <p>[The per-share metric to track instead.]</p></div>
+  </div>
+</div></section>
+
+<!-- 11 — BOTTOM LINE : the bet, the checklist, the disclosure -->
+<section class="slide"><div class="wrap">
+  <div class="eyebrow r">10 <span>/ Bottom line</span></div>
+  <h2 class="r">The bet, stated plainly.</h2>
+  <div class="r"><p class="lead">[What is answered.]</p>
+    <p>[What is open — the actual uncertainty.]</p>
+    <p>[The bull case stated as a proposition, not a promise. What closes the gap or eats it.]</p></div>
+  <div class="r"><h3>Check these every [quarter]</h3>
+    <div class="tblscroll"><table>
+      <tr><th>Watch</th><th class="fact">Good</th><th class="risk">Bad</th></tr>
+      <tr><td>[Metric 1]</td><td>[$200–260M]</td><td>[Under $200M]</td></tr>
+      <tr><td>[Metric 2]</td><td>[Low teens]</td><td>[Under 8%]</td></tr>
+      <tr><td>[Metric 3]</td><td>[Flat or up]</td><td>[Any decline]</td></tr>
+      <tr><td>[Metric 4]</td><td>[Stays 6 years]</td><td>[Gets shortened]</td></tr>
+    </table></div></div>
+  <div class="r" style="margin-top:24px">
+    <span class="pill w">NOT FINANCIAL ADVICE</span><span class="pill">[AUTHOR HOLDS X / NO POSITION]</span>
+    <p class="disc">Education only — not advice, not a recommendation. [I'm not a registered
+    investment adviser.] [Disclose any position and call it a conflict.] Figures come from
+    [source documents] dated [date]. [Market cap and debt are approximate — verify against
+    the 10-Q.] Anything marked amber is my own estimate, not company guidance, and will be
+    wrong to some degree. Do your own research.</p>
+  </div>
+</div></section>
+
+</main>
+
+<button class="nav prev" id="prev" aria-label="Previous slide">←</button>
+<nav class="dots" id="dots" aria-label="Slide navigation"></nav>
+<button class="nav next" id="next" aria-label="Next slide">→</button>
+
+<script>
+/* Navigation + dial. Tested — change the constants, not the machinery. */
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  const prev=document.getElementById('prev'), next=document.getElementById('next');
+  const bar=document.getElementById('bar'), cur=document.getElementById('cur');
+  let i=0;
+
+  slides.forEach((_,n)=>{
+    const b=document.createElement('button');
+    b.className='dot'; b.type='button';
+    b.setAttribute('aria-label','Go to slide '+(n+1));
+    b.addEventListener('click',()=>go(n));
+    dots.appendChild(b);
+  });
+  const dotEls=[...dots.children];
+
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>{
+      if(k===i){s.dataset.on='1'; s.scrollTop=0;}
+      else delete s.dataset.on;
+    });
+    dotEls.forEach((d,k)=>d.setAttribute('aria-current',k===i?'true':'false'));
+    bar.style.width=((i+1)/slides.length*100)+'%';
+    cur.textContent=String(i+1).padStart(2,'0');
+    prev.disabled=(i===0); next.disabled=(i===slides.length-1);
+  }
+  prev.addEventListener('click',()=>go(i-1));
+  next.addEventListener('click',()=>go(i+1));
+  addEventListener('keydown',e=>{
+    if(e.target.type==='range')return;          /* let the slider own arrow keys */
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home'){e.preventDefault();go(0)}
+    if(e.key==='End'){e.preventDefault();go(slides.length-1)}
+  });
+  let x0=null;
+  addEventListener('touchstart',e=>{x0=e.changedTouches[0].clientX},{passive:true});
+  addEventListener('touchend',e=>{
+    if(x0===null)return;
+    const d=e.changedTouches[0].clientX-x0;
+    if(Math.abs(d)>60) go(d<0?i+1:i-1);
+    x0=null;
+  },{passive:true});
+
+  /* ---- sensitivity dial ----
+     Replace TODAY (current revenue, $B), EV (enterprise value, $B),
+     UNITS (units at horizon), YEARS (compounding period), and the zone
+     thresholds in label() with your own. */
+  const sl=document.getElementById('sl');
+  const pgw=document.getElementById('pgw'), rev=document.getElementById('rev');
+  const mult=document.getElementById('mult'), cagr=document.getElementById('cagr'),
+        evx=document.getElementById('evx'), tag=document.getElementById('tag');
+  const TODAY=12.8, EV=76, UNITS=8, YEARS=4;
+
+  function label(v){
+    if(v<9.4)  return ['BEAR — [what breaks pricing]','var(--risk)'];
+    if(v<11.2) return ["BASE CASE — TODAY'S RATE, HELD FLAT",'var(--est)'];
+    if(v<13.6) return ['BULL — [what improves the mix]','var(--fact)'];
+    return ['AGGRESSIVE — [sustained real gains]','var(--fact)'];
+  }
+  function draw(){
+    const v=sl.value/10, r=v*UNITS;
+    pgw.textContent='$'+v.toFixed(1)+'B';
+    rev.textContent='$'+Math.round(r)+'B';
+    mult.textContent=(r/TODAY).toFixed(1)+'x';
+    cagr.textContent=Math.round((Math.pow(r/TODAY,1/YEARS)-1)*100)+'%';
+    evx.textContent=(EV/r).toFixed(1)+'x';
+    const [t,c]=label(v); tag.textContent=t; tag.style.color=c;
+    rev.style.color=c; pgw.style.color=c;
+  }
+  sl.addEventListener('input',draw);
+  draw(); go(0);
+})();
+</script>
+</body></html>

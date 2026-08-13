@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[THEME] — [SUBTITLE]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0C10; --bg2:#0E1117; --surface:#141A22; --surface2:#1A222C;
+  --line:#242D39; --line2:#333E4D;
+  --copper:#C87B4A; --copper-br:#E39A63; --copper-dim:#7A5334;   /* supply chain */
+  --teal:#35B8A6; --teal-br:#54D8C4; --teal-dim:#1E5F57;         /* the scarce asset */
+  --text:#EAE8E2; --muted:#8B94A3; --muted2:#5A6473;
+  --green:#57D368; --red:#F0616D; --amber:#E3AC44;               /* semantic state */
+  --display:'Archivo',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-0.02em}
+a{color:var(--teal-br);text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+/* ---- ticker ---- */
+.tickbar{border-bottom:1px solid var(--line);background:var(--bg2);font-family:var(--mono);
+  font-size:12px;overflow:hidden;white-space:nowrap;position:sticky;top:0;z-index:60}
+.tickbar .run{display:inline-block;padding:9px 0;animation:scroll 60s linear infinite}
+.tickbar:hover .run{animation-play-state:paused}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk{margin:0 20px;color:var(--muted)}
+.tk b{color:var(--text);font-weight:600}
+.tk .up{color:var(--green)} .tk .dn{color:var(--red)}
+
+/* ---- nav ---- */
+nav{position:sticky;top:37px;z-index:55;background:rgba(10,12,16,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:6px;height:52px;overflow-x:auto;scrollbar-width:none}
+nav .wrap::-webkit-scrollbar{display:none}
+nav .brand{font-family:var(--display);font-weight:900;font-size:15px;letter-spacing:.06em;
+  margin-right:14px;white-space:nowrap}
+nav .brand span{color:var(--copper)}
+nav a{color:var(--muted);font-size:12.5px;font-weight:600;padding:7px 11px;border-radius:7px;
+  white-space:nowrap;font-family:var(--mono)}
+nav a:hover{color:var(--text);background:var(--surface)}
+
+/* ---- hero ---- */
+.hero{padding:66px 0 48px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(680px 340px at 82% -8%, rgba(200,123,74,.14), transparent 62%),
+  radial-gradient(520px 300px at 8% 108%, rgba(53,184,166,.11), transparent 60%);pointer-events:none}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:20px}
+.hero h1{font-size:clamp(38px,7.4vw,80px);font-weight:900;letter-spacing:-0.035em}
+.hero h1 .l2{color:var(--muted)}
+.hero .sub{font-size:clamp(16px,2.1vw,20px);color:var(--muted);max-width:680px;margin-top:22px;line-height:1.55}
+.hero .sub b{color:var(--text);font-weight:600}
+.betline{margin-top:30px;font-family:var(--display);font-weight:700;font-size:clamp(18px,2.6vw,24px);
+  letter-spacing:-.01em;border-left:3px solid var(--teal);padding-left:16px}
+.betline em{color:var(--teal-br);font-style:normal}
+.herostats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:44px;
+  background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.hs{background:var(--surface);padding:20px 18px}
+.hs .n{font-family:var(--mono);font-weight:600;font-size:clamp(24px,3.4vw,34px);letter-spacing:-.02em}
+.hs .n.c{color:var(--copper-br)} .hs .n.t{color:var(--teal-br)}
+.hs .l{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+/* ---- section shell ---- */
+section{padding:60px 0;border-bottom:1px solid var(--line)}
+.sec-tag{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--teal);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-tag::before{content:"";width:26px;height:1px;background:var(--teal)}
+.sec-h{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.03em;max-width:900px}
+.sec-lead{color:var(--muted);font-size:16px;max-width:720px;margin-top:16px;line-height:1.6}
+.sec-lead b{color:var(--text);font-weight:600}
+
+/* ---- chart + facts ---- */
+.chartcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:22px 20px 16px;margin-top:26px}
+.chartcard .ct{font-family:var(--display);font-weight:700;font-size:16px;margin-bottom:2px}
+.chartcard .cs{font-size:12.5px;color:var(--muted);margin-bottom:14px;font-family:var(--mono)}
+.srcnote{font-family:var(--mono);font-size:10.5px;color:var(--muted2);margin-top:12px}
+.factgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.fact{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--copper);
+  border-radius:10px;padding:18px}
+.fact .n{font-family:var(--mono);font-weight:600;font-size:22px;color:var(--copper-br)}
+.fact .t{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+.fact.t2{border-left-color:var(--teal)} .fact.t2 .n{color:var(--teal-br)}
+
+/* ---- flow map (signature element) ---- */
+.flowlegend{display:flex;flex-wrap:wrap;gap:18px;margin-top:24px;font-family:var(--mono);
+  font-size:12px;color:var(--muted)}
+.flowlegend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+.dot.firm{background:var(--teal)} .dot.mol{background:var(--copper)}
+.dot.buy{background:var(--teal);border-radius:50%}
+.dot.watch{background:var(--copper);border-radius:50%}
+.dot.spec{background:var(--muted2);border-radius:50%}
+.flow{margin-top:26px;display:grid;grid-template-columns:1fr 22px 1.55fr 22px 1fr 22px .9fr;
+  gap:0;align-items:stretch}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 14px;
+  display:flex;flex-direction:column}
+.stage h4{font-size:12px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px;font-weight:600}
+.stage .cap{font-size:11px;color:var(--muted2);margin-bottom:13px;line-height:1.4}
+.subcol{margin-bottom:12px}
+.subcol .sl{font-family:var(--display);font-weight:700;font-size:12.5px;color:var(--text);
+  margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--mono);font-size:12px;font-weight:600;padding:5px 8px;border-radius:6px;
+  border:1px solid var(--line2);background:var(--surface2);display:inline-flex;align-items:center;
+  gap:6px;color:var(--text)}
+.chip.firm{border-color:var(--teal-dim)} .chip.firm b{color:var(--teal-br)}
+.chip.mol{border-color:var(--copper-dim)} .chip.mol b{color:var(--copper-br)}
+.chip .tag{font-size:9.5px;color:var(--muted);font-weight:400}
+.chip .vd{width:6px;height:6px;border-radius:50%}
+.vd.buy{background:var(--teal)} .vd.watch{background:var(--copper)} .vd.spec{background:var(--muted2)}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--copper);font-size:20px;
+  font-family:var(--mono)}
+.flow-note{margin-top:22px;background:linear-gradient(90deg,rgba(224,172,68,.09),transparent);
+  border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;
+  padding:16px 18px;font-size:14.5px;color:var(--text)}
+.flow-note b{color:var(--amber)}
+
+/* ---- scoreboard ---- */
+.tblwrap{margin-top:26px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tblscroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:13px}
+thead th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);text-align:right;padding:13px 12px;background:var(--bg2);
+  border-bottom:1px solid var(--line2);white-space:nowrap;position:sticky;top:0}
+thead th:first-child,thead th.l{text-align:left}
+tbody td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line);
+  font-family:var(--mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody td.l{text-align:left;font-family:var(--body)}
+tbody tr:hover{background:var(--surface)}
+tbody tr.tier-head td{background:var(--surface2);font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--copper-br);padding:9px 12px;
+  font-weight:600;text-align:left}
+.tkr{font-weight:700;color:var(--text)}
+.co{color:var(--muted);font-size:11.5px;display:block;margin-top:1px;font-family:var(--body)}
+.g-hi{color:var(--green)} .g-md{color:var(--teal-br)} .g-lo{color:var(--muted)}
+.vrd{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 8px;border-radius:5px;
+  display:inline-block}
+.vrd.buy{background:rgba(87,211,104,.13);color:var(--green)}
+.vrd.top{background:rgba(84,216,196,.13);color:var(--teal-br)}
+.vrd.watch{background:rgba(227,172,68,.13);color:var(--amber)}
+.vrd.spec{background:rgba(200,123,74,.13);color:var(--copper-br)}
+.vrd.avoid{background:rgba(240,97,109,.12);color:var(--red)}
+.tblfoot{font-family:var(--mono);font-size:10.5px;color:var(--muted2);padding:12px 14px;
+  background:var(--bg2);line-height:1.5}
+
+/* ---- bull / bear ---- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.card.bull{border-top:2px solid var(--teal)}
+.card.bear{border-top:2px solid var(--red)}
+.card h3{font-size:17px;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.card h3 .k{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:5px}
+.k.g{background:rgba(84,216,196,.14);color:var(--teal-br)} .k.r{background:rgba(240,97,109,.14);color:var(--red)}
+.card ul{list-style:none}
+.card li{font-size:13.5px;color:var(--muted);padding:8px 0 8px 20px;position:relative;
+  border-bottom:1px solid var(--line);line-height:1.5}
+.card li:last-child{border-bottom:none}
+.card li b{color:var(--text);font-weight:600}
+.card li::before{content:"";position:absolute;left:0;top:15px;width:7px;height:7px;border-radius:50%}
+.bull li::before{background:var(--teal)} .bear li::before{background:var(--red)}
+
+/* ---- deep dive ---- */
+.pickhead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px;margin-top:26px;padding:24px;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.pickhead .big{font-family:var(--display);font-weight:900;font-size:clamp(30px,5vw,46px);
+  letter-spacing:-.03em;line-height:1}
+.pickhead .big span{color:var(--copper)}
+.pickhead .px{font-family:var(--mono);font-size:15px;color:var(--muted)}
+.pickhead .px .p{color:var(--text);font-size:22px;font-weight:600}
+.pickhead .verdict{margin-left:auto;text-align:right}
+.pickhead .verdict .lab{font-family:var(--mono);font-size:11px;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase}
+.pickhead .verdict .val{font-family:var(--display);font-weight:900;font-size:30px;
+  color:var(--amber);letter-spacing:-.02em}
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:16px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.q{background:var(--surface);padding:16px 15px}
+.q .n{font-family:var(--mono);font-weight:600;font-size:19px}
+.q .n.up{color:var(--green)} .q .n.c{color:var(--copper-br)}
+.q .l{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35}
+
+/* conviction bars */
+.conv{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.conv h3{font-size:16px;margin-bottom:16px}
+.convrow{display:grid;grid-template-columns:130px 1fr 46px;gap:14px;align-items:center;
+  margin-bottom:11px;font-size:13px}
+.convrow .cl{font-family:var(--mono);color:var(--muted);font-size:12px}
+.bar{height:9px;background:var(--surface2);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--copper),var(--copper-br))}
+.bar i.t{background:linear-gradient(90deg,var(--teal),var(--teal-br))}
+.convrow .cv{font-family:var(--mono);font-weight:600;text-align:right;font-size:13px}
+.convtot{display:flex;align-items:baseline;gap:10px;margin-top:18px;padding-top:16px;
+  border-top:1px solid var(--line2)}
+.convtot .tn{font-family:var(--display);font-weight:900;font-size:38px;color:var(--teal-br);letter-spacing:-.02em}
+.convtot .tl{font-family:var(--mono);color:var(--muted);font-size:13px}
+
+/* ---- tiers ---- */
+.ranks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:26px}
+.rank{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;
+  border-top:3px solid var(--line2)}
+.rank.t1{border-top-color:var(--teal)} .rank.t2{border-top-color:var(--copper)}
+.rank.t3{border-top-color:var(--amber)} .rank.t4{border-top-color:var(--muted2)}
+.rank .rt{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px}
+.rank .rn{font-family:var(--display);font-weight:800;font-size:18px;margin-bottom:14px;letter-spacing:-.02em}
+.rank .rn.t1{color:var(--teal-br)} .rank .rn.t2{color:var(--copper-br)}
+.rank .item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+  border-bottom:1px solid var(--line);font-size:13px}
+.rank .item:last-child{border:none}
+.rank .item .nm{font-family:var(--mono);font-weight:600}
+.rank .item .nm span{color:var(--muted);font-weight:400;font-family:var(--body);font-size:11.5px;display:block}
+.rank .item .why{color:var(--muted);font-size:11px;text-align:right;max-width:120px;font-family:var(--body)}
+
+/* ---- monitoring ---- */
+.mongrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.moncol{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.moncol h3{font-size:16px;margin-bottom:16px}
+.cal .ev{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.cal .ev:last-child{border:none}
+.cal .dt{font-family:var(--mono);font-size:11px;color:var(--copper-br);font-weight:600;line-height:1.3}
+.cal .ttl{font-size:13px} .cal .ttl b{color:var(--text)}
+.cal .ttl span{color:var(--muted);display:block;font-size:11.5px;margin-top:2px}
+.sig{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.sig:last-child{border:none}
+.sig .sn{color:var(--muted)} .sig .sn b{color:var(--text)}
+.sig .sv{font-family:var(--mono);font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:5px}
+.sv.pos{background:rgba(87,211,104,.12);color:var(--green)}
+.sv.neg{background:rgba(240,97,109,.12);color:var(--red)}
+.sv.neu{background:rgba(139,148,163,.12);color:var(--muted)}
+
+/* kill criteria */
+.kill{margin-top:16px;background:linear-gradient(90deg,rgba(240,97,109,.07),transparent);
+  border:1px solid var(--line);border-left:3px solid var(--red);border-radius:10px;padding:18px 20px}
+.kill h4{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--red);margin-bottom:12px}
+.kill li{list-style:none;font-size:13.5px;color:var(--muted);padding:6px 0 6px 18px;
+  position:relative;line-height:1.5}
+.kill li b{color:var(--text)}
+.kill li::before{content:"✕";position:absolute;left:0;color:var(--red);font-size:11px;top:8px}
+
+/* footer */
+footer{padding:44px 0 60px}
+.disc{font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;max-width:900px}
+.disc b{color:var(--muted)}
+.gap{margin-top:20px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--amber);border-radius:10px;padding:16px 18px;font-size:12.5px;color:var(--muted)}
+.gap b{color:var(--amber);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+
+@media(max-width:1000px){
+  .flow{grid-template-columns:1fr;gap:10px}
+  .arrow{transform:rotate(90deg);height:24px}
+  .herostats{grid-template-columns:1fr 1fr}
+  .qgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .factgrid{grid-template-columns:1fr}
+  .two,.mongrid{grid-template-columns:1fr}
+  .herostats{grid-template-columns:1fr 1fr}
+  .convrow{grid-template-columns:96px 1fr 40px}
+  .hero{padding:44px 0 36px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     DASHBOARD TEMPLATE — equity-research-deck
+     Fill every [BRACKET]. Seven sections, in argument order.
+     Two accent families: --teal = the scarce asset, --copper = the supply chain.
+     Semantic state stays separate: --green/--red/--amber.
+     ============================================================ -->
+
+<!-- TICKER — duplicate the run of .tk spans exactly twice for a seamless loop -->
+<div class="tickbar"><div class="run"
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="dn">[-0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="dn">[-0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="dn">[-0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="dn">[-0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+  ><span class="tk"><b>[TICK]</b> [PRICE] <span class="up">[+0.0%]</span></span
+></div></div>
+
+<nav><div class="wrap">
+  <div class="brand">[THE THEME]<span>·</span>[TRADE]</div>
+  <a href="#thesis">Thesis</a>
+  <a href="#map">Flow Map</a>
+  <a href="#board">Scoreboard</a>
+  <a href="#value">Valuation</a>
+  <a href="#deep">Deep Dive</a>
+  <a href="#ranks">Rankings</a>
+  <a href="#monitor">Monitor</a>
+</div></nav>
+
+<!-- HERO — state a differentiated call, not a topic -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">[Institutional Research] · [Sub-theme] · [DD Mon YYYY]</div>
+  <h1>[The first half of the call]<br><span class="l2">[the second half.]</span></h1>
+  <p class="sub">[The consensus view, then the differentiated one.] <b>[The asymmetry in one
+    bolded clause.]</b> [Two or three sourced figures that establish it.]</p>
+  <div class="betline">This is a bet on <em>[the mechanism]</em> — that [the specific claim].</div>
+  <div class="herostats">
+    <div class="hs"><div class="n c">[194 GW]</div><div class="l">[What it measures] ([source])</div></div>
+    <div class="hs"><div class="n t">[~6→20%]</div><div class="l">[What it measures]</div></div>
+    <div class="hs"><div class="n c">[$700B+]</div><div class="l">[What it measures]</div></div>
+    <div class="hs"><div class="n t">[9.8 GW]</div><div class="l">[What it measures]</div></div>
+  </div>
+</div></header>
+
+<!-- 01 THESIS -->
+<section id="thesis"><div class="wrap">
+  <div class="sec-tag">01 — The Thesis</div>
+  <h2 class="sec-h">[The asymmetry, as a claim.]</h2>
+  <p class="sec-lead">[What is already consensus, and what is the differentiated part.]
+    <b>[The differentiated part, bolded.]</b> [What follows from it downstream.]</p>
+
+  <div class="chartcard">
+    <div class="ct">[Chart title — what it measures, over what period]</div>
+    <div class="cs">[Units · historical vs. projection · source: [SOURCE]]</div>
+    <!-- Hand-author the SVG bar chart, or drop in any inline <svg>.
+         viewBox 0 0 1000 360, width:100%, height:auto. Keep the projection
+         divider line so forecast is visibly separated from realized. -->
+    <div class="chwrap">[INLINE SVG CHART]</div>
+    <div class="srcnote">[Projection range. What one unit means. "Shaded region is forecast,
+      not realized."]</div>
+  </div>
+
+  <div class="factgrid">
+    <div class="fact"><div class="n">[+253%]</div><div class="t">[What it is and where it came from.]</div></div>
+    <div class="fact t2"><div class="n">[15 GW]</div><div class="t">[What it is and where it came from.]</div></div>
+    <div class="fact"><div class="n">[Mid-2027]</div><div class="t">[What it is and where it came from.]</div></div>
+    <div class="fact t2"><div class="n">[~92–95%]</div><div class="t">[What it is and where it came from.]</div></div>
+    <div class="fact"><div class="n">[$443B → $700B+]</div><div class="t">[What it is and where it came from.]</div></div>
+    <div class="fact t2"><div class="n">[2027]</div><div class="t">[What it is and where it came from.]</div></div>
+  </div>
+</div></section>
+
+<!-- 02 FLOW MAP — the signature element -->
+<section id="map"><div class="wrap">
+  <div class="sec-tag">02 — The Flow Map</div>
+  <h2 class="sec-h">[Follow the unit. Every stage is a trade.]</h2>
+  <p class="sec-lead">[How value moves left to right through the chain.] The scarce, premium
+    asset is <b>[the teal category]</b>. [The copper category] is the picks-and-shovels layer
+    feeding it. Dots mark our verdict.</p>
+
+  <div class="flowlegend">
+    <span><i class="dot firm"></i> [Scarce premium asset]</span>
+    <span><i class="dot mol"></i> [Supply chain / hardware]</span>
+    <span style="margin-left:6px"><i class="dot buy"></i> Buy-tier</span>
+    <span><i class="dot watch"></i> Watch / tactical</span>
+    <span><i class="dot spec"></i> Speculative / pre-revenue</span>
+  </div>
+
+  <div class="flow">
+    <div class="stage">
+      <h4>01 · [Upstream]</h4>
+      <div class="cap">[What this stage does and why it matters.]</div>
+      <div class="subcol"><div class="sl">[Sub-category]</div>
+        <div class="chips">
+          <span class="chip mol"><span class="vd watch"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+          <span class="chip mol"><span class="vd spec"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+        </div></div>
+    </div>
+    <div class="arrow">▸</div>
+
+    <div class="stage">
+      <h4>02 · [Production]</h4>
+      <div class="cap">[What this stage does.]</div>
+      <div class="subcol"><div class="sl">[Premium sub-category]</div>
+        <div class="chips">
+          <span class="chip firm"><span class="vd buy"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+          <span class="chip firm"><span class="vd watch"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+        </div></div>
+      <div class="subcol"><div class="sl">[Optionality — pre-revenue]</div>
+        <div class="chips">
+          <span class="chip firm"><span class="vd spec"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+        </div></div>
+    </div>
+    <div class="arrow">▸</div>
+
+    <div class="stage">
+      <h4>03 · [Delivery]</h4>
+      <div class="cap">[What this stage does.]</div>
+      <div class="subcol"><div class="sl">[Equipment]</div>
+        <div class="chips">
+          <span class="chip firm"><span class="vd buy"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+        </div></div>
+    </div>
+    <div class="arrow">▸</div>
+
+    <div class="stage">
+      <h4>04 · [End use]</h4>
+      <div class="cap">[Where the unit does its work.]</div>
+      <div class="subcol"><div class="sl">[Sub-category]</div>
+        <div class="chips">
+          <span class="chip firm"><span class="vd buy"></span><b>[TICK]</b><span class="tag">[why]</span></span>
+        </div></div>
+    </div>
+  </div>
+
+  <div class="flow-note"><b>[The takeaway.]</b> [Which stage captures the economics, and why
+    the map changes what you'd own.]</div>
+</div></section>
+
+<!-- 03 SCOREBOARD -->
+<section id="board"><div class="wrap">
+  <div class="sec-tag">03 — The Scoreboard</div>
+  <h2 class="sec-h">Every name, on comparable numbers.</h2>
+  <p class="sec-lead">[What basis — forward or trailing, and as of when. State it or the
+    table is not honest.]</p>
+  <div class="tblwrap"><div class="tblscroll">
+    <table>
+      <thead><tr>
+        <th class="l">Name</th><th>[Mkt cap]</th><th>[Rev growth]</th><th>[Margin]</th>
+        <th>[EV/Sales]</th><th>[Multiple]</th><th class="l">Verdict</th>
+      </tr></thead>
+      <tbody>
+        <tr class="tier-head"><td colspan="7">[Tier 1 — the core]</td></tr>
+        <tr>
+          <td class="l"><span class="tkr">[TICK]</span><span class="co">[Company name]</span></td>
+          <td>[$00B]</td><td class="g-hi">[+00%]</td><td>[00%]</td><td>[0.0x]</td><td>[00x]</td>
+          <td class="l"><span class="vrd buy">BUY</span></td>
+        </tr>
+        <tr class="tier-head"><td colspan="7">[Tier 2 — watch]</td></tr>
+        <tr>
+          <td class="l"><span class="tkr">[TICK]</span><span class="co">[Company name]</span></td>
+          <td>[$00B]</td><td class="g-md">[+00%]</td><td>[00%]</td><td>[0.0x]</td><td>[00x]</td>
+          <td class="l"><span class="vrd watch">WATCH</span></td>
+        </tr>
+        <tr class="tier-head"><td colspan="7">[Tier 3 — speculative]</td></tr>
+        <tr>
+          <td class="l"><span class="tkr">[TICK]</span><span class="co">[Company name]</span></td>
+          <td>[$0B]</td><td class="g-lo">[n/m]</td><td class="g-lo">[neg]</td><td>[00x]</td><td>[n/m]</td>
+          <td class="l"><span class="vrd spec">SPEC</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tblfoot">[As-of date. Estimate basis. Which columns are consensus vs. your own.
+    n/m = not meaningful.]</div>
+  </div>
+</div></section>
+
+<!-- 04 VALUATION -->
+<section id="value"><div class="wrap">
+  <div class="sec-tag">04 — Valuation Map</div>
+  <h2 class="sec-h">What you pay vs. what you get.</h2>
+  <p class="sec-lead">[Where the multiples cluster, and which names are mispriced against
+    their growth. Use enterprise value, and say so.]</p>
+  <div class="two">
+    <div class="card bull"><h3><span class="k g">CHEAP</span> [Why these re-rate]</h3>
+      <ul>
+        <li><b>[TICK]</b> — [the argument, with the number]</li>
+        <li><b>[TICK]</b> — [the argument, with the number]</li>
+      </ul></div>
+    <div class="card bear"><h3><span class="k r">RICH</span> [What is priced in]</h3>
+      <ul>
+        <li><b>[TICK]</b> — [what the multiple already assumes]</li>
+        <li><b>[TICK]</b> — [what the multiple already assumes]</li>
+      </ul></div>
+  </div>
+</div></section>
+
+<!-- 05 DEEP DIVE -->
+<section id="deep"><div class="wrap">
+  <div class="sec-tag">05 — Featured Deep Dive</div>
+  <h2 class="sec-h">[Name]: [the one-line reason it's featured].</h2>
+  <div class="pickhead">
+    <div><div class="big">[TICK]<span>.</span></div>
+      <div class="px"><span class="p">[$000.00]</span> [· mkt cap $00B]</div></div>
+    <div class="verdict"><div class="lab">Verdict</div><div class="val">[WATCH]</div></div>
+  </div>
+  <div class="qgrid">
+    <div class="q"><div class="n up">[+00%]</div><div class="l">[What it measures]</div></div>
+    <div class="q"><div class="n">[$000M]</div><div class="l">[What it measures]</div></div>
+    <div class="q"><div class="n c">[00%]</div><div class="l">[What it measures]</div></div>
+    <div class="q"><div class="n">[0.0x]</div><div class="l">[What it measures]</div></div>
+  </div>
+  <div class="two">
+    <div class="card bull"><h3><span class="k g">BULL</span> Why it re-rates</h3>
+      <ul>
+        <li><b>[Driver.]</b> [Evidence.]</li>
+        <li><b>[Driver.]</b> [Evidence.]</li>
+        <li><b>[Driver.]</b> [Evidence.]</li>
+      </ul></div>
+    <div class="card bear"><h3><span class="k r">BEAR</span> What kills it</h3>
+      <ul>
+        <li><b>[Risk.]</b> [Mechanism.]</li>
+        <li><b>[Risk.]</b> [Mechanism.]</li>
+        <li><b>[Risk.]</b> [Mechanism.]</li>
+      </ul></div>
+  </div>
+  <div class="conv">
+    <h3>Conviction rating — $[TICK]</h3>
+    <div class="convrow"><span class="cl">[Demand]</span><span class="bar"><i class="t" style="width:90%"></i></span><span class="cv">9/10</span></div>
+    <div class="convrow"><span class="cl">[Moat]</span><span class="bar"><i class="t" style="width:70%"></i></span><span class="cv">7/10</span></div>
+    <div class="convrow"><span class="cl">[Balance sheet]</span><span class="bar"><i style="width:50%"></i></span><span class="cv">5/10</span></div>
+    <div class="convrow"><span class="cl">[Valuation]</span><span class="bar"><i style="width:40%"></i></span><span class="cv">4/10</span></div>
+    <div class="convtot"><span class="tn">6.3</span><span class="tl">/ 10 — [one-line verdict]</span></div>
+  </div>
+</div></section>
+
+<!-- 06 RANKINGS -->
+<section id="ranks"><div class="wrap">
+  <div class="sec-tag">06 — The Verdict</div>
+  <h2 class="sec-h">[If I could own five, here's the basket.]</h2>
+  <div class="ranks">
+    <div class="rank t1"><div class="rt">Tier 1</div><div class="rn t1">The five</div>
+      <div class="item"><span class="nm">[TICK]<span>[name]</span></span><span class="why">[one reason]</span></div>
+      <div class="item"><span class="nm">[TICK]<span>[name]</span></span><span class="why">[one reason]</span></div>
+    </div>
+    <div class="rank t2"><div class="rt">Tier 2</div><div class="rn t2">Add on weakness</div>
+      <div class="item"><span class="nm">[TICK]<span>[name]</span></span><span class="why">[one reason]</span></div>
+    </div>
+    <div class="rank t3"><div class="rt">Tier 3</div><div class="rn">Yield &amp; ballast</div>
+      <div class="item"><span class="nm">[TICK]<span>[name]</span></span><span class="why">[one reason]</span></div>
+    </div>
+    <div class="rank t4"><div class="rt">Tier 4</div><div class="rn">Lottery tickets</div>
+      <div class="item"><span class="nm">[TICK]<span>[name]</span></span><span class="why">[size it small]</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 07 MONITORING -->
+<section id="monitor"><div class="wrap">
+  <div class="sec-tag">07 — The Monitoring System</div>
+  <h2 class="sec-h">What to watch, and what would change our mind.</h2>
+  <div class="mongrid">
+    <div class="moncol"><h3>Catalyst calendar</h3>
+      <div class="cal">
+        <div class="ev"><div class="dt">[DD MON]</div><div class="ttl"><b>[Event]</b><span>[Why it matters]</span></div></div>
+        <div class="ev"><div class="dt">[DD MON]</div><div class="ttl"><b>[Event]</b><span>[Why it matters]</span></div></div>
+        <div class="ev"><div class="dt">[Q0 YY]</div><div class="ttl"><b>[Event]</b><span>[Why it matters]</span></div></div>
+      </div>
+    </div>
+    <div class="moncol"><h3>Leading indicators</h3>
+      <div class="sig"><span class="sn"><b>[Indicator]</b> — [what it tells you]</span><span class="sv pos">[POSITIVE]</span></div>
+      <div class="sig"><span class="sn"><b>[Indicator]</b> — [what it tells you]</span><span class="sv neu">[NEUTRAL]</span></div>
+      <div class="sig"><span class="sn"><b>[Indicator]</b> — [what it tells you]</span><span class="sv neg">[NEGATIVE]</span></div>
+    </div>
+  </div>
+
+  <div class="kill">
+    <h4>Kill criteria — what ends the thesis</h4>
+    <li><b>[Specific, observable, dated condition.]</b> [Why it is fatal, not just bad.]</li>
+    <li><b>[Specific, observable, dated condition.]</b> [Why it is fatal.]</li>
+    <li><b>[Specific, observable, dated condition.]</b> [Why it is fatal.]</li>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p class="disc"><b>Not investment advice.</b> Education and research only. [Author is not a
+    registered investment adviser.] [Disclose positions held and call them a conflict.]
+    Figures as of [DATE] from [primary sources]. Forward estimates are the author's own unless
+    attributed, and will be wrong to some degree. Verify against primary filings before acting.
+    Do your own research.</p>
+  <div class="gap"><b>Known gaps</b> — [What this analysis does not cover, what data was
+    unavailable, and where sources disagreed. Say it here rather than letting a reader find it.]</div>
+</div></footer>
+
+</body></html>

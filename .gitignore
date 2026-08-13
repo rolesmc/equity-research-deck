@@ -1,0 +1,24 @@
+# Generated deliverables — keep the templates, not the output
+output/
+*.deck.html
+*.dashboard.html
+
+# Working notes from research runs
+.research/
+scratch/
+
+# Planning artifacts are tracked; execution state is not
+.planning/STATE.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
